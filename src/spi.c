@@ -59,8 +59,9 @@ void SPI_Config(void)
   GPIO_Init(SPIx_MOSI_GPIO_PORT, &GPIO_InitStructure);
 
   /* SPI Chip Select pin configuration */
-  GPIO_InitStructure.GPIO_OType = GPIO_OType_OD;
-  GPIO_InitStructure.GPIO_PuPd  = GPIO_PuPd_NOPULL;	/* */
+  GPIO_InitStructure.GPIO_Mode = GPIO_Mode_OUT;
+  GPIO_InitStructure.GPIO_OType = GPIO_OType_OD;		/* check */
+  GPIO_InitStructure.GPIO_PuPd  = GPIO_PuPd_NOPULL;
   GPIO_InitStructure.GPIO_Pin =  SPIx_CS_PIN;
   GPIO_Init(SPIx_CS_GPIO_PORT, &GPIO_InitStructure);
 
@@ -68,11 +69,11 @@ void SPI_Config(void)
 
   /* SPI configuration -------------------------------------------------------*/
   SPI_I2S_DeInit(SPIx);
-  SPI_InitStructure.SPI_Mode = SPI_Mode_Slave;
+  SPI_InitStructure.SPI_Mode = SPI_Mode_Master;
   SPI_InitStructure.SPI_Direction = SPI_Direction_2Lines_FullDuplex;
   SPI_InitStructure.SPI_DataSize = SPI_DataSize_8b;
-  SPI_InitStructure.SPI_CPOL = SPI_CPOL_High;
-  SPI_InitStructure.SPI_CPHA = SPI_CPHA_2Edge;
+  SPI_InitStructure.SPI_CPOL = SPI_CPOL_High;		/* TODO check */
+  SPI_InitStructure.SPI_CPHA = SPI_CPHA_2Edge;		/* TODO check */
   SPI_InitStructure.SPI_NSS = SPI_NSS_Hard;
   SPI_InitStructure.SPI_BaudRatePrescaler = SPI_BaudRatePrescaler_2;	/* useless? we are in slave mode so...*/
   SPI_InitStructure.SPI_FirstBit = SPI_FirstBit_MSB;
@@ -85,8 +86,12 @@ void SPI_Config(void)
   /* Enable the Tx empty interrupt */
   //SPI_I2S_ITConfig(SPIx, SPI_I2S_IT_TXE, ENABLE);
 
-  SPI_I2S_DMACmd(SPIx, SPI_DMAReq_Rx, ENABLE);
-  SPI_I2S_DMACmd(SPIx, SPI_DMAReq_Tx, ENABLE);
+  /*
+   * TODO
+   * use DMA
+   */
+  //SPI_I2S_DMACmd(SPIx, SPI_DMAReq_Rx, ENABLE);
+  //SPI_I2S_DMACmd(SPIx, SPI_DMAReq_Tx, ENABLE);
 
   /* Enable the SPI peripheral */
   SPI_Cmd(SPIx, ENABLE);
@@ -101,27 +106,9 @@ void SPI_Config(void)
   NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
   NVIC_Init(&NVIC_InitStructure);
 
-  SYSCFG_EXTILineConfig(EXTI_PortSourceGPIOB, EXTI_PinSource12);	/* CS is on PB12 */
+  spi_dataReceived = RESET;
+  spi_nextDR = 0x00;
 
-
-  EXTI_DeInit();
-  EXTI_StructInit(&EXTI_InitStructure);
-
-  EXTI_InitStructure.EXTI_Line = EXTI_Line12;
-  EXTI_InitStructure.EXTI_Mode = EXTI_Mode_Interrupt;
-  EXTI_InitStructure.EXTI_Trigger = EXTI_Trigger_Rising_Falling;	/* trigger on both ?*/
-  EXTI_InitStructure.EXTI_LineCmd = ENABLE;
-  EXTI_Init(&EXTI_InitStructure);
-
-   NVIC_InitStructure.NVIC_IRQChannel = EXTI15_10_IRQn;
-   NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 1;
-   NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0;
-   NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
-   NVIC_Init(&NVIC_InitStructure);
-  //
-
-   spi_dataReceived = RESET;
-   spi_nextDR = 0x00;
 }
 
 
@@ -146,24 +133,3 @@ void SPIx_IRQHANDLER(void)
 	  	  spi_ubRxIndex++;
   }
 }
-
-void EXTI15_10_IRQHandler (void)
-{
-	if( EXTI_GetITStatus(EXTI_Line12) != RESET)
-	{
-		if(  GPIO_ReadInputDataBit(SPIx_CS_GPIO_PORT, SPIx_CS_PIN) == Bit_RESET) /* CS is low! start of SPI operation */
-		{
-			spi_ubRxIndex = 0;	/* be ready */
-
-		}
-		else	/* CS High! end of SPI operation */
-		{
-			/* end */
-			SPI2->DR = 0xff;	/* set first value to be sent */
-		}
-
-		EXTI_ClearITPendingBit(EXTI_Line12);	/* clear interrupt! should be done manually */
-	}
-
-}
-

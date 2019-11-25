@@ -15,12 +15,14 @@
 			
 #include "systick.h"
 #include "uart.h"
+#include "spi.h"
 
 int main(void)
 {
 	const char strStart[] = "START\n";
 
 	UART_fv_config(RESET);
+	SPI_Config();
 
 	UART_fv_SendData(strStart, strlen(strStart));
 

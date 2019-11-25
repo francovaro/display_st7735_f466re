@@ -30,18 +30,18 @@
   #define SPIx_MISO_SOURCE               GPIO_PinSource2
   #define SPIx_MISO_AF                   GPIO_AF_SPI2
 
-  #define SPIx_MOSI_PIN                  GPIO_Pin_3
+  #define SPIx_MOSI_PIN                  GPIO_Pin_1
   #define SPIx_MOSI_GPIO_PORT            GPIOC
   #define SPIx_MOSI_GPIO_CLK             RCC_AHB1Periph_GPIOC
-  #define SPIx_MOSI_SOURCE               GPIO_PinSource3
+  #define SPIx_MOSI_SOURCE               GPIO_PinSource1
   #define SPIx_MOSI_AF                   GPIO_AF_SPI2
 
-  #define SPIx_CS_PIN                  GPIO_Pin_12
-  #define SPIx_CS_GPIO_PORT            GPIOB
-  #define SPIx_CS_GPIO_CLK             RCC_AHB1Periph_GPIOB
-  #define SPIx_CS_SOURCE               GPIO_PinSource12
-  #define SPIx_CS_AF                   GPIO_AF_SPI2
-  #define SPIx_CS_IRQHANDLER 		   EXTI0_IRQn
+  #define SPIx_CS_PIN                 	 GPIO_Pin_12
+  #define SPIx_CS_GPIO_PORT            	 GPIOB
+  #define SPIx_CS_GPIO_CLK             	 RCC_AHB1Periph_GPIOB
+  #define SPIx_CS_SOURCE                 GPIO_PinSource12
+  #define SPIx_CS_AF                     GPIO_AF_SPI2
+  #define SPIx_CS_IRQHANDLER 		     EXTI0_IRQn
 
 #define BUFFERSIZE                       100	/* */
 
