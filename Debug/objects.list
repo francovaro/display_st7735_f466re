@@ -1,4 +1,5 @@
 "src/main.o"
+"src/spi.o"
 "src/syscalls.o"
 "src/system_stm32f4xx.o"
 "src/systick.o"
