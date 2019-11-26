@@ -47,6 +47,11 @@
 #define LCD_A0_GPIO_CLK                RCC_AHB1Periph_GPIOC
 #define LCD_A0_SOURCE                  GPIO_PinSource3
 
+#define LCD_RESET_PIN                  GPIO_Pin_4
+#define LCD_RESET_GPIO_PORT            GPIOC
+#define LCD_RESET_GPIO_CLK             RCC_AHB1Periph_GPIOC
+#define LCD_RESET_SOURCE               GPIO_PinSource3
+
 #define BUFFERSIZE                     100	/* */
 
 volatile uint8_t spi_dataReceived;

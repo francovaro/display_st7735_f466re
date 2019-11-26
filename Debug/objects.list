@@ -1,3 +1,4 @@
+"src/delay.o"
 "src/lcd.o"
 "src/main.o"
 "src/spi.o"

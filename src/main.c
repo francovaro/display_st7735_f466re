@@ -16,6 +16,7 @@
 #include "systick.h"
 #include "uart.h"
 #include "spi.h"
+#include "lcd.h"
 
 int main(void)
 {
