@@ -69,4 +69,7 @@ extern void ST7735_FillRect(uint16_t X1, uint16_t Y1, uint16_t X2, uint16_t Y2, 
 extern void ST7735_PutChar5x7(uint16_t X, uint16_t Y, uint8_t chr, uint16_t color);
 extern void ST7735_PutStr5x7(uint8_t X, uint8_t Y, char *str, uint16_t color);
 
+extern void Lcd_write_reg(uint8_t reg, uint8_t data);
+extern void Lcd_reset(void);
+
 #endif /* LCD_H_ */
