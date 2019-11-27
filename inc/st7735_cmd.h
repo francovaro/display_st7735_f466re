@@ -23,7 +23,7 @@ typedef enum
 	SWRESET,
 	RDDID,
 	RDDST,
-	RDDST,
+	RDDPM,
 	RDD_MADCTL,
 	RDD_COLMOD,
 	RDDIM,
