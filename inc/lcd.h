@@ -18,18 +18,6 @@
 #define LCD_SCREEN_W         128
 #define LCD_SCREEN_H         128
 
-// ST7735 A0 (Data/Command select) pin
-#define ST7735_A0_PORT     GPIOB
-#define ST7735_A0_PIN      GPIO_Pin_4    // PB4
-
-// ST7735 RST (Reset) pin
-#define ST7735_RST_PORT    GPIOB
-#define ST7735_RST_PIN     GPIO_Pin_6    // PB6
-
-// ST7735 CS (Chip Select) pin
-#define ST7735_CS_PORT     GPIOB
-#define ST7735_CS_PIN      GPIO_Pin_7    // PB7
-
 // CS pin macros
 #define CS_L() GPIO_ResetBits(SPIx_CS_GPIO_PORT, SPIx_CS_PIN)
 #define CS_H() GPIO_SetBits(SPIx_CS_GPIO_PORT, SPIx_CS_PIN)
@@ -49,6 +37,13 @@ typedef enum {
 	eLCD_orientation_normal_180    	= 3,
 	eLCD_orientation_max
 } tLCD_orientation;
+
+typedef struct
+{
+	uint8_t cmd;
+	uint8_t *data;
+	uint8_t nrOfByte;
+} tLCD_cmd;
 
 extern void ST7735_write(uint8_t data);
 
@@ -71,5 +66,8 @@ extern void ST7735_PutStr5x7(uint8_t X, uint8_t Y, char *str, uint16_t color);
 
 extern void Lcd_write_reg(uint8_t reg, uint8_t data);
 extern void Lcd_reset(void);
+extern void Lcd_send_cmd(tLCD_cmd cmd);
+extern void Lcd_init(void);
+extern void Lcd_another_init(void);
 
 #endif /* LCD_H_ */

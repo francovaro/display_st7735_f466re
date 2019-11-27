@@ -26,19 +26,20 @@ void SPI_Config(void)
   SPIx_CLK_INIT(SPIx_CLK, ENABLE);
 
   /* Enable GPIO clocks */
-  RCC_AHB1PeriphClockCmd(SPIx_SCK_GPIO_CLK | SPIx_MISO_GPIO_CLK | SPIx_MOSI_GPIO_CLK | LCD_A0_GPIO_CLK, ENABLE);
+  //RCC_AHB1PeriphClockCmd(SPIx_SCK_GPIO_CLK | SPIx_MISO_GPIO_CLK | SPIx_MOSI_GPIO_CLK | LCD_A0_GPIO_CLK, ENABLE);
+  RCC_AHB1PeriphClockCmd(SPIx_SCK_GPIO_CLK | SPIx_MOSI_GPIO_CLK | LCD_A0_GPIO_CLK, ENABLE);
 
   /* SPI GPIO Configuration --------------------------------------------------*/
   /* GPIO Deinitialisation */
   GPIO_DeInit(SPIx_SCK_GPIO_PORT);
-  GPIO_DeInit(SPIx_MISO_GPIO_PORT);
+  //GPIO_DeInit(SPIx_MISO_GPIO_PORT);
   GPIO_DeInit(SPIx_MOSI_GPIO_PORT);
   GPIO_DeInit(SPIx_CS_GPIO_PORT);
   GPIO_DeInit(LCD_A0_GPIO_PORT);
 
   /* Connect SPI pins to AF5 */
   GPIO_PinAFConfig(SPIx_SCK_GPIO_PORT, SPIx_SCK_SOURCE, SPIx_SCK_AF);
-  GPIO_PinAFConfig(SPIx_MISO_GPIO_PORT, SPIx_MISO_SOURCE, SPIx_MISO_AF);	/* can be removed ! */
+  //GPIO_PinAFConfig(SPIx_MISO_GPIO_PORT, SPIx_MISO_SOURCE, SPIx_MISO_AF);	/* can be removed ! */
   GPIO_PinAFConfig(SPIx_MOSI_GPIO_PORT, SPIx_MOSI_SOURCE, SPIx_MOSI_AF);
   //GPIO_PinAFConfig(SPIx_CS_GPIO_PORT, SPIx_CS_SOURCE, SPIx_CS_AF);
 
@@ -52,8 +53,8 @@ void SPI_Config(void)
   GPIO_Init(SPIx_SCK_GPIO_PORT, &GPIO_InitStructure);
 
   /* SPI  MISO pin configuration */
-  GPIO_InitStructure.GPIO_Pin =  SPIx_MISO_PIN;
-  GPIO_Init(SPIx_MISO_GPIO_PORT, &GPIO_InitStructure);
+  //GPIO_InitStructure.GPIO_Pin =  SPIx_MISO_PIN;
+  //GPIO_Init(SPIx_MISO_GPIO_PORT, &GPIO_InitStructure);
 
   /* SPI  MOSI pin configuration */
   GPIO_InitStructure.GPIO_Pin =  SPIx_MOSI_PIN;
@@ -85,7 +86,8 @@ void SPI_Config(void)
 
   SPI_Init(SPIx, &SPI_InitStructure);
 
-  SPI_I2S_ITConfig(SPIx, SPI_I2S_IT_RXNE, ENABLE);
+  /* Enable the Rx not empty interrupt */
+  //SPI_I2S_ITConfig(SPIx, SPI_I2S_IT_RXNE, ENABLE);
 
   /* Enable the Tx empty interrupt */
   //SPI_I2S_ITConfig(SPIx, SPI_I2S_IT_TXE, ENABLE);
@@ -107,7 +109,7 @@ void SPI_Config(void)
   NVIC_InitStructure.NVIC_IRQChannel = SPIx_IRQn;
   NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 1;
   NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0;
-  NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
+  NVIC_InitStructure.NVIC_IRQChannelCmd = DISABLE;	/* don't need it*/
   NVIC_Init(&NVIC_InitStructure);
 
   spi_dataReceived = RESET;
@@ -133,7 +135,8 @@ void SPIx_IRQHANDLER(void)
 
 
   }
-  else if (SPI_I2S_GetITStatus(SPIx, SPI_I2S_IT_TXE) == SET)
+
+  if (SPI_I2S_GetITStatus(SPIx, SPI_I2S_IT_TXE) == SET)
   {
 	  SPI_I2S_ClearITPendingBit(SPIx, SPI_I2S_IT_TXE);
 	  spi_ubRxIndex++;

@@ -18,35 +18,42 @@
 #define SPIx_IRQn                      SPI2_IRQn
 #define SPIx_IRQHANDLER                SPI2_IRQHandler
 
+/* CLK - GPIOB 10*/
 #define SPIx_SCK_PIN                   GPIO_Pin_10
 #define SPIx_SCK_GPIO_PORT             GPIOB
 #define SPIx_SCK_GPIO_CLK              RCC_AHB1Periph_GPIOB
 #define SPIx_SCK_SOURCE                GPIO_PinSource10
 #define SPIx_SCK_AF                    GPIO_AF_SPI2
 
+#if 0
 #define SPIx_MISO_PIN                  GPIO_Pin_2
 #define SPIx_MISO_GPIO_PORT            GPIOC
 #define SPIx_MISO_GPIO_CLK             RCC_AHB1Periph_GPIOC
 #define SPIx_MISO_SOURCE               GPIO_PinSource2
 #define SPIx_MISO_AF                   GPIO_AF_SPI2
+#endif
 
+/* MOSI/SDA -  GPIOC 1*/
 #define SPIx_MOSI_PIN                  GPIO_Pin_1
 #define SPIx_MOSI_GPIO_PORT            GPIOC
 #define SPIx_MOSI_GPIO_CLK             RCC_AHB1Periph_GPIOC
 #define SPIx_MOSI_SOURCE               GPIO_PinSource1
 #define SPIx_MOSI_AF                   GPIO_AF_SPI2
 
+/* CHIP SELECT - GPIOB 12*/
 #define SPIx_CS_PIN                    GPIO_Pin_12
 #define SPIx_CS_GPIO_PORT              GPIOB
 #define SPIx_CS_GPIO_CLK               RCC_AHB1Periph_GPIOB
 #define SPIx_CS_SOURCE                 GPIO_PinSource12
 #define SPIx_CS_AF                     GPIO_AF_SPI2
 
+/* A0 - GPIOC 3*/
 #define LCD_A0_PIN                     GPIO_Pin_3
 #define LCD_A0_GPIO_PORT               GPIOC
 #define LCD_A0_GPIO_CLK                RCC_AHB1Periph_GPIOC
 #define LCD_A0_SOURCE                  GPIO_PinSource3
 
+/* RESET - GPIOC 4*/
 #define LCD_RESET_PIN                  GPIO_Pin_4
 #define LCD_RESET_GPIO_PORT            GPIOC
 #define LCD_RESET_GPIO_CLK             RCC_AHB1Periph_GPIOC
