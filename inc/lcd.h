@@ -13,6 +13,7 @@
 /* Includes ------------------------------------------------------------------*/
 #include "stm32f4xx.h"
 #include "spi.h"
+#include "st7735_cmd.h"
 
 /* Screen resolution */
 #define LCD_SCREEN_W         128
@@ -37,13 +38,6 @@ typedef enum {
 	eLCD_orientation_normal_180    	= 3,
 	eLCD_orientation_max
 } tLCD_orientation;
-
-typedef struct
-{
-	uint8_t cmd;
-	uint8_t *data;
-	uint8_t nrOfByte;
-} tLCD_cmd;
 
 extern void ST7735_write(uint8_t data);
 
