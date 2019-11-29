@@ -11,6 +11,7 @@
 #include "st7735_cmd.h"
 #include "lcd.h"
 #include "spi.h"
+#include "delay.h"
 
 #define NULL 0;
 
@@ -197,13 +198,14 @@ void ST7735_send_panel_cmd(tST7735_panel_cmd panelCmd)
 
 void ST7735_init_with_commands(void)
 {
+	Lcd_reset();
 	ST7735_sys_cmd_init();
 	ST7735_sys_cmd_init();
 
 	CS_L();	/* start of transmission */
 
 	ST7735_send_sys_cmd(SLPOUT);	/* 0x11 */
-
+	Delay_ms (150);
 	ST7735_send_panel_cmd(FRMCTR1);	/* 0xB1 */
 	ST7735_send_panel_cmd(FRMCTR2);	/* 0xB2 */
 	ST7735_send_panel_cmd(FRMCTR3);	/* 0xB3 */
@@ -239,4 +241,16 @@ void ST7735_init_with_commands(void)
 	CS_H();	/* end of transmission */
 }
 
-
+void ST7735_turns_display(uint8_t power)
+{
+	CS_L();	/* start of transmission */
+	if (SET == power)
+	{
+		ST7735_send_sys_cmd(DISPON);
+	}
+	else
+	{
+		ST7735_send_sys_cmd(DISPOFF);
+	}
+	CS_H();	/* end of transmission */
+}

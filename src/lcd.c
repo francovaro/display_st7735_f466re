@@ -13,8 +13,8 @@
 #include "font5x7.h"
 #include "st7735_cmd.h"
 
-static uint8_t _lcd_screen_w;
-static uint8_t _lcd_screen_h;
+static uint8_t _lcd_screen_w = LCD_SCREEN_W;
+static uint8_t _lcd_screen_h = LCD_SCREEN_H;
 
 
 
@@ -117,7 +117,7 @@ void ST7735_Orientation(tLCD_orientation orientation)
 
 void ST7735_AddrSet(uint16_t XS, uint16_t YS, uint16_t XE, uint16_t YE)
 {
-	CS_L();
+	//CS_L();
 	ST7735_cmd(0x2a); // Column address set
 	A0_H();
 	ST7735_write(XS >> 8);
@@ -133,7 +133,7 @@ void ST7735_AddrSet(uint16_t XS, uint16_t YS, uint16_t XE, uint16_t YE)
 	ST7735_write(YE);
 
 	ST7735_cmd(0x2c); // Memory write
-	CS_H();
+	//CS_H();
 }
 
 void ST7735_Clear(uint16_t color)
