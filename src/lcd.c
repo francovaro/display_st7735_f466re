@@ -556,8 +556,3 @@ void Lcd_another_init(void)
 
 	ST7735_Orientation(eLCD_orientation_normal);
 }
-
-void Lcd_init_with_cmd(void)
-{
-	
-}
