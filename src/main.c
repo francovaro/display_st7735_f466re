@@ -18,6 +18,7 @@
 #include "spi.h"
 #include "lcd.h"
 #include "color.h"
+#include "st7735_cmd.h"
 
 int main(void)
 {

@@ -54,8 +54,7 @@ typedef enum
 	COLMOD,
 	RDID1,
 	RDID2,
-	RDID3,
-	e_syscmd_max
+	RDID3
 }tST7735_system_cmd;
 
 typedef enum
@@ -75,16 +74,7 @@ typedef enum
 	WRID3,
 	NVCTR1,
 	NVCTR2,
-	NVCTR3,
-	GAMCTRP1,
-	GAMCTRN1,
-	e_panelcmd_max
+	NVCTR3
 }tST7735_panel_cmd;
-
-extern void ST7735_system_cmd_init(void);
-extern void ST7735_panel_cmd_init(void);
-extern void ST7735_send_sys_cmd(tST7735_system_cmd sysCmd);
-extern void ST7735_send_panel_cmd(tST7735_panel_cmd panelCmd);
-extern void ST7735_init_with_commands(void);
 
 #endif /* ST7735_CMD_H_ */

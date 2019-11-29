@@ -8,6 +8,7 @@ C_SRCS += \
 ../src/lcd.c \
 ../src/main.c \
 ../src/spi.c \
+../src/st7735_cmd.c \
 ../src/syscalls.c \
 ../src/system_stm32f4xx.c \
 ../src/systick.c \
@@ -18,6 +19,7 @@ OBJS += \
 ./src/lcd.o \
 ./src/main.o \
 ./src/spi.o \
+./src/st7735_cmd.o \
 ./src/syscalls.o \
 ./src/system_stm32f4xx.o \
 ./src/systick.o \
@@ -28,6 +30,7 @@ C_DEPS += \
 ./src/lcd.d \
 ./src/main.d \
 ./src/spi.d \
+./src/st7735_cmd.d \
 ./src/syscalls.d \
 ./src/system_stm32f4xx.d \
 ./src/systick.d \

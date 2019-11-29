@@ -63,5 +63,7 @@ extern void Lcd_reset(void);
 extern void Lcd_send_cmd(tLCD_cmd cmd);
 extern void Lcd_init(void);
 extern void Lcd_another_init(void);
+extern void ST7735_cmd(uint8_t cmd);
+extern void ST7735_data(uint8_t cmd);
 
 #endif /* LCD_H_ */
