@@ -43,7 +43,7 @@ int main(void)
 		//ST7735_Clear(COLOR_BLUE);
 		CS_L();
 		ST7735_Clear(COLOR_BLUE);
-		Delay_ms(500);
+		//Delay_ms(500);
 		CS_H();
 		Delay_ms(500);
 	}
