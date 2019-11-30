@@ -67,8 +67,13 @@ void SPI_Config(void)
   GPIO_InitStructure.GPIO_Pin =  SPIx_CS_PIN;
   GPIO_Init(SPIx_CS_GPIO_PORT, &GPIO_InitStructure);
 
+  /* command/data pin*/
   GPIO_InitStructure.GPIO_Pin =  LCD_A0_PIN;
   GPIO_Init(LCD_A0_GPIO_PORT, &GPIO_InitStructure);
+
+  /* reset pin */
+  GPIO_InitStructure.GPIO_Pin =  LCD_RESET_PIN;
+  GPIO_Init(LCD_RESET_GPIO_PORT, &GPIO_InitStructure);
 
   /* SPI configuration -------------------------------------------------------*/
   SPI_I2S_DeInit(SPIx);
