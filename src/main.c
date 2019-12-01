@@ -23,6 +23,7 @@
 
 int main(void)
 {
+	uint16_t color = 0;
 	const char strStart[] = "START\n";
 
 	UART_fv_config(RESET);
@@ -32,20 +33,17 @@ int main(void)
 
 	CS_L();
 	ST7735_AddrSet(0, 0, (LCD_SCREEN_W-1), (LCD_SCREEN_H-1));
-	ST7735_Clear(COLOR_BLUE);
 	CS_H();
-	//ST7735_turns_display(0);
+
+	ST7735_Clear(0xFFFF);
 
 	UART_fv_SendData(strStart, strlen(strStart));
 
 	while(1)
 	{
-		//ST7735_Clear(COLOR_BLUE);
-		CS_L();
-		ST7735_Clear(COLOR_BLUE);
-		//Delay_ms(500);
-		CS_H();
-		Delay_ms(500);
+		ST7735_Clear(color);
+		color++;
+		Delay_ms(250);
 	}
 
 }

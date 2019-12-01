@@ -11,29 +11,30 @@
 #include "stm32f4xx.h"
 #include "spi.h"
 
-SPI_InitTypeDef  SPI_InitStructure;
 
 /**
  *
  */
 void SPI_Config(void)
 {
+  SPI_InitTypeDef  SPI_InitStructure;
   GPIO_InitTypeDef GPIO_InitStructure;
-  NVIC_InitTypeDef NVIC_InitStructure;
+  // NVIC_InitTypeDef NVIC_InitStructure;
 
   /* Peripheral Clock Enable -------------------------------------------------*/
+
   /* Enable the SPI clock */
   SPIx_CLK_INIT(SPIx_CLK, ENABLE);
 
   /* Enable GPIO clocks */
   //RCC_AHB1PeriphClockCmd(SPIx_SCK_GPIO_CLK | SPIx_MISO_GPIO_CLK | SPIx_MOSI_GPIO_CLK | LCD_A0_GPIO_CLK, ENABLE);
-  RCC_AHB1PeriphClockCmd(SPIx_SCK_GPIO_CLK | SPIx_MOSI_GPIO_CLK | LCD_A0_GPIO_CLK | LCD_RESET_GPIO_CLK, ENABLE);
-  RCC_APB1PeriphClockCmd(RCC_APB1Periph_SPI2, ENABLE);	/* clk to spi peripheral */
+  RCC_AHB1PeriphClockCmd(SPIx_SCK_GPIO_CLK | SPIx_MOSI_GPIO_CLK | SPIx_CS_GPIO_CLK
+		  	  	  	  	  	  | LCD_A0_GPIO_CLK | LCD_RESET_GPIO_CLK, ENABLE);
+
 
   /* SPI GPIO Configuration --------------------------------------------------*/
   /* GPIO Deinitialisation */
   GPIO_DeInit(SPIx_SCK_GPIO_PORT);
-  //GPIO_DeInit(SPIx_MISO_GPIO_PORT);
   GPIO_DeInit(SPIx_MOSI_GPIO_PORT);
   GPIO_DeInit(SPIx_CS_GPIO_PORT);
   GPIO_DeInit(LCD_A0_GPIO_PORT);
@@ -41,9 +42,6 @@ void SPI_Config(void)
   /* Connect SPI pins to AF5 */
   GPIO_PinAFConfig(SPIx_SCK_GPIO_PORT, SPIx_SCK_SOURCE, SPIx_SCK_AF);
   GPIO_PinAFConfig(SPIx_MOSI_GPIO_PORT, SPIx_MOSI_SOURCE, SPIx_MOSI_AF);
-
-  //GPIO_PinAFConfig(SPIx_MISO_GPIO_PORT, SPIx_MISO_SOURCE, SPIx_MISO_AF);	/* can be removed ! */
-  //GPIO_PinAFConfig(SPIx_CS_GPIO_PORT, SPIx_CS_SOURCE, SPIx_CS_AF);
 
   GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF;
   GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
@@ -77,6 +75,8 @@ void SPI_Config(void)
   GPIO_InitStructure.GPIO_Pin =  LCD_RESET_PIN;
   GPIO_Init(LCD_RESET_GPIO_PORT, &GPIO_InitStructure);
 
+  GPIO_SetBits(SPIx_CS_GPIO_PORT, SPIx_CS_PIN);
+
   /* SPI configuration -------------------------------------------------------*/
   SPI_I2S_DeInit(SPIx);
   SPI_InitStructure.SPI_Mode = SPI_Mode_Master;
@@ -85,7 +85,7 @@ void SPI_Config(void)
   SPI_InitStructure.SPI_CPOL = SPI_CPOL_Low;		/* from chinese demo... */
   SPI_InitStructure.SPI_CPHA = SPI_CPHA_1Edge;		/* from chinese demo... */
   SPI_InitStructure.SPI_NSS = SPI_NSS_Soft;
-  SPI_InitStructure.SPI_BaudRatePrescaler = SPI_BaudRatePrescaler_2;	/* in demo is SPI_CRCCALCULATION_DISABLE */
+  SPI_InitStructure.SPI_BaudRatePrescaler = SPI_BaudRatePrescaler_8;	/* in demo is SPI_CRCCALCULATION_DISABLE */
   SPI_InitStructure.SPI_FirstBit = SPI_FirstBit_MSB;
   SPI_InitStructure.SPI_CRCPolynomial = 7;
 
@@ -110,6 +110,7 @@ void SPI_Config(void)
   SPI_Cmd(SPIx, ENABLE);
 
   /* Configure the Priority Group to 1 bit */
+#ifdef _SPI_IRQ
   NVIC_PriorityGroupConfig(NVIC_PriorityGroup_2);
 
   /* Configure the SPI interrupt priority */
@@ -118,9 +119,7 @@ void SPI_Config(void)
   NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0;
   NVIC_InitStructure.NVIC_IRQChannelCmd = DISABLE;	/* don't need it*/
   NVIC_Init(&NVIC_InitStructure);
-
-  spi_dataReceived = RESET;
-  spi_nextDR = 0x00;
+#endif
 
 }
 
@@ -133,19 +132,11 @@ void SPIx_IRQHANDLER(void)
   if (SPI_I2S_GetITStatus(SPIx, SPI_I2S_IT_RXNE) == SET)
   {
 	  /* Receive Transaction data */
-	  //aRxBuffer[spi_ubRxIndex] = SPI2->DR;	/* read, it clears automatically the interrupt bit  */
-	  //spi_dataReceived = SET;
-
-	  //SPI2->DR = spi_txBuffer[spi_ubRxIndex];	/* and set, for the next one? */
 	  SPI_I2S_ClearITPendingBit(SPIx, SPI_I2S_IT_RXNE);
-	  spi_ubRxIndex++;
-
-
   }
 
   if (SPI_I2S_GetITStatus(SPIx, SPI_I2S_IT_TXE) == SET)
   {
 	  SPI_I2S_ClearITPendingBit(SPIx, SPI_I2S_IT_TXE);
-	  spi_ubRxIndex++;
   }
 }

@@ -33,8 +33,8 @@ static uint8_t GAMSET_buffer_buffer[1] = { 0x01};
 
 
 
-static uint8_t GAMCTRP1_buffer[16] = { 0x0E};
-static uint8_t GAMCTRN1_buffer[16] = { 0x0E};
+static uint8_t GAMCTRP1_buffer[16] = {0x02, 0x1C, 0x07, 0x12, 0x37, 0x32, 0x29, 0x2D, 0x29, 0x25, 0x2B, 0x39, 0x00, 0x01, 0x03, 0x10 };
+static uint8_t GAMCTRN1_buffer[16] = {0x03, 0x1d, 0x07, 0x06, 0x2E, 0x2C, 0x29, 0x2D, 0x2E, 0x2E, 0x37, 0x3F, 0x00, 0x00, 0x02, 0x10 };
 
 static uint8_t CASET_buffer_buffer[4] 	= {0x00, 0x00, 0x00, 0x7F};
 static uint8_t RASET_buffer_buffer[4] 	= {0x00, 0x00, 0x00, 0x9F};
@@ -196,6 +196,44 @@ void ST7735_send_panel_cmd(tST7735_panel_cmd panelCmd)
     CS_H();
 }
 
+/*
+ // PWCTR1 Power control -4.6V, Auto mode
+{ 0xC0, 0, 3, { 0xA2, 0x02, 0x84}},
+// PWCTR2 Power control VGH25 2.4C, VGSEL -10, VGH = 3 * AVDD
+{ 0xC1, 0, 1, { 0xC5}},
+// PWCTR3 Power control , opamp current smal , boost frequency
+{ 0xC2, 0, 2, { 0x0A, 0x00 }},
+// PWCTR4 Power control , BLK/2, opamp current small and medium low
+{ 0xC3, 0, 2, { 0x8A, 0x2A}},
+// PWRCTR5 , VMCTR1 Power control
+{ 0xC4, 0, 2, { 0x8A, 0xEE}},
+{ 0xC5, 0, 1, { 0x0E }},
+// INVOFF Don't invert display
+{ 0x20, 0, 0, 0},
+// Memory access directions. row address/col address , bottom to
+,!top refesh (10.1.27)
+{ ST7735_MADCTL , 0, 1, {MADVAL(MADCTLGRAPHICS)}},
+// Color mode 16 bit (10.1.30
+{ ST7735_COLMOD , 0, 1, {0x05}},
+// Column address set 0..127
+{ ST7735_CASET , 0, 4, {0x00, 0x00, 0x00, 0x7F }},
+// Row address set 0..159
+{ ST7735_RASET , 0, 4, {0x00, 0x00, 0x00, 0x9F }},
+// GMCTRP1 Gamma correction
+{ 0xE0, 0, 16, {0x02, 0x1C, 0x07, 0x12, 0x37, 0x32, 0x29, 0x2D,
+0x29, 0x25, 0x2B, 0x39, 0x00, 0x01, 0x03, 0x10 }},
+// GMCTRP2 Gamma Polarity corrction
+{ 0xE1, 0, 16, {0x03, 0x1d, 0x07, 0x06, 0x2E, 0x2C, 0x29, 0x2D,
+0x2E, 0x2E, 0x37, 0x3F, 0x00, 0x00, 0x02, 0x10 }},
+// DISPON Display on
+{ 0x29, 100, 0, 0},
+// NORON Normal on
+{ 0x13, 10, 0, 0},
+// End
+{ 0, 0, 0, 0}
+ */
+#define _ADA_INIT
+
 void ST7735_init_with_commands(void)
 {
 	Lcd_reset();
@@ -206,6 +244,7 @@ void ST7735_init_with_commands(void)
 
 	ST7735_send_sys_cmd(SLPOUT);	/* 0x11 */
 	Delay_ms (150);
+#ifndef _ADA_INIT
 	ST7735_send_panel_cmd(FRMCTR1);	/* 0xB1 */
 	ST7735_send_panel_cmd(FRMCTR2);	/* 0xB2 */
 	ST7735_send_panel_cmd(FRMCTR3);	/* 0xB3 */
@@ -213,9 +252,7 @@ void ST7735_init_with_commands(void)
 	ST7735_send_panel_cmd(INVCTR);	/* 0xB4 */
 
 	ST7735_send_sys_cmd(COLMOD);	/* 0x3A */
-
-
-#if 0
+#if 1
 	ST7735_send_panel_cmd(PWCTR2);	/* 0xC1 */
 	ST7735_send_panel_cmd(PWCTR3);	/* 0xC2 */
 	ST7735_send_panel_cmd(PWCTR4);	/* 0xC3 */
@@ -237,7 +274,31 @@ void ST7735_init_with_commands(void)
 	ST7735_send_sys_cmd(GAMSET);			/* 0x13 */
 
 #endif
+#else
+	ST7735_send_panel_cmd(PWCTR1);	/* 0xC0 */
+	ST7735_send_panel_cmd(PWCTR2);	/* 0xC1 */
+	ST7735_send_panel_cmd(PWCTR3);	/* 0xC2 */
+	ST7735_send_panel_cmd(PWCTR4);	/* 0xC3 */
+	ST7735_send_panel_cmd(PWCTR5);	/* 0xC4 */
+
+	ST7735_send_sys_cmd(INVOFF);		/* 0x20 */
+
+	ST7735_send_sys_cmd(MADCTL);	/* 0x36*/
+
+	ST7735_send_sys_cmd(COLMOD);	/* 0x3A */
+
+	ST7735_send_sys_cmd(CASET);		/* 0x2A */
+	ST7735_send_sys_cmd(RASET);		/* 0x2B */
+
+	ST7735_send_panel_cmd(GAMCTRP1);	/* 0xE0 */
+	ST7735_send_panel_cmd(GAMCTRN1);	/* 0xE1 */
+#endif
+
 	ST7735_send_sys_cmd(DISPON);
+	Delay_ms(100);
+	ST7735_send_sys_cmd(NORON);
+	Delay_ms(10);
+
 	CS_H();	/* end of transmission */
 }
 

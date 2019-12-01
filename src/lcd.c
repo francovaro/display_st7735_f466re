@@ -146,9 +146,9 @@ void ST7735_Clear(uint16_t color)
 	CL = (uint8_t)color;
 
 	CS_L();
-	ST7735_AddrSet(0,0,_lcd_screen_w - 1,_lcd_screen_h - 1);
+	ST7735_AddrSet(0,0,LCD_SCREEN_W - 1,LCD_SCREEN_H - 1);
 	A0_H();
-	for (i = 0; i < _lcd_screen_w * _lcd_screen_h; i++)
+	for (i = 0; i < LCD_SCREEN_W * LCD_SCREEN_H; i++)
 	{
 		ST7735_write(CH);
 		ST7735_write(CL);
@@ -266,7 +266,7 @@ void ST7735_Line(int16_t X1, int16_t Y1, int16_t X2, int16_t Y2, uint16_t color)
 void Lcd_reset(void)
 {
 	RST_L();
-	Delay_ms(100);
+	Delay_ms(150);
 	RST_H();
 	Delay_ms(50);
 }
