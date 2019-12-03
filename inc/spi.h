@@ -57,6 +57,18 @@
 #define LCD_RESET_GPIO_PORT            GPIOC
 #define LCD_RESET_GPIO_CLK             RCC_AHB1Periph_GPIOC
 
+// CS pin macros
+#define CS_L() GPIO_ResetBits(SPIx_CS_GPIO_PORT, SPIx_CS_PIN)
+#define CS_H() GPIO_SetBits(SPIx_CS_GPIO_PORT, SPIx_CS_PIN)
+
+// A0 pin macros
+#define A0_L() GPIO_ResetBits(LCD_A0_GPIO_PORT, LCD_A0_PIN)
+#define A0_H() GPIO_SetBits(LCD_A0_GPIO_PORT, LCD_A0_PIN)
+
+// RESET pin macros
+#define RST_L() GPIO_ResetBits(LCD_RESET_GPIO_PORT, LCD_RESET_PIN)
+#define RST_H() GPIO_SetBits(LCD_RESET_GPIO_PORT, LCD_RESET_PIN)
+
 #define BUFFERSIZE                     100	/* */
 
 void SPI_Config(void);

@@ -13,30 +13,14 @@
 #include "font5x7.h"
 #include "st7735_cmd.h"
 
-static uint8_t _lcd_screen_w = LCD_SCREEN_W;
-static uint8_t _lcd_screen_h = LCD_SCREEN_H;
-
-
-
 /**
  *
  * @param data
  */
 void ST7735_write(uint8_t data)
 {
-#ifdef SOFT_SPI
-	uint8_t i;
-
-	for(i = 0; i < 8; i++) {
-		if (data & 0x80) SDA_H(); else SDA_L();
-		data = data << 1;
-		SCK_L();
-		SCK_H();
-	}
-#else
 	while (SPI_I2S_GetFlagStatus(SPIx, SPI_I2S_FLAG_TXE) == RESET);
 	SPI_I2S_SendData(SPIx, data);
-#endif
 }
 
 /**
@@ -58,18 +42,14 @@ void ST7735_cmd(uint8_t cmd)
 {
 	A0_L();
 	ST7735_write(cmd);
-#ifndef SOFT_SPI
 	while (SPI_I2S_GetFlagStatus(SPIx, SPI_I2S_FLAG_BSY) == SET);
-#endif
 }
 
 void ST7735_data(uint8_t data)
 {
 	A0_H();
 	ST7735_write(data);
-#ifndef SOFT_SPI
 	while (SPI_I2S_GetFlagStatus(SPIx, SPI_I2S_FLAG_BSY) == SET);
-#endif
 }
 
 uint16_t RGB565(uint8_t R,uint8_t G,uint8_t B)
@@ -77,47 +57,9 @@ uint16_t RGB565(uint8_t R,uint8_t G,uint8_t B)
 	return ((R >> 3) << 11) | ((G >> 2) << 5) | (B >> 3);
 }
 
-void ST7735_Orientation(tLCD_orientation orientation)
-{
-	CS_L();
-	ST7735_cmd(0x36); // Memory data access control:
-	switch(orientation)
-	{
-		case eLCD_orientation_CW:
-		{
-			_lcd_screen_w  = LCD_SCREEN_H;
-			_lcd_screen_h = LCD_SCREEN_W;
-			ST7735_data(0xA0); // X-Y Exchange,Y-Mirror
-		}
-		break;
-		case eLCD_orientation_normal_CCW:
-		{
-			_lcd_screen_w  = LCD_SCREEN_H;
-			_lcd_screen_h = LCD_SCREEN_W;
-			ST7735_data(0x60); // X-Y Exchange,X-Mirror
-		}
-		break;
-		case eLCD_orientation_normal_180:
-		{
-			_lcd_screen_w  = LCD_SCREEN_W;
-			_lcd_screen_h = LCD_SCREEN_H;
-			ST7735_data(0xc0); // X-Mirror,Y-Mirror: Bottom to top; Right to left; RGB
-		}
-		break;
-		default:
-		{
-			_lcd_screen_w  = LCD_SCREEN_W;
-			_lcd_screen_h = LCD_SCREEN_H;
-			ST7735_data(0x00); // Normal: Top to Bottom; Left to Right; RGB
-		}
-		break;
-	}
-	CS_H();
-}
-
 void ST7735_AddrSet(uint16_t XS, uint16_t YS, uint16_t XE, uint16_t YE)
 {
-	//CS_L();
+	CS_L();
 	ST7735_cmd(0x2a); // Column address set
 	A0_H();
 	ST7735_write(XS >> 8);
@@ -133,7 +75,7 @@ void ST7735_AddrSet(uint16_t XS, uint16_t YS, uint16_t XE, uint16_t YE)
 	ST7735_write(YE);
 
 	ST7735_cmd(0x2c); // Memory write
-	//CS_H();
+	CS_H();
 }
 
 void ST7735_Clear(uint16_t color)
@@ -209,12 +151,26 @@ void ST7735_Line(int16_t X1, int16_t Y1, int16_t X2, int16_t Y2, uint16_t color)
 
 	if (dX == 0)
 	{
-		if (Y2>Y1) ST7735_VLine(X1,Y1,Y2,color); else ST7735_VLine(X1,Y2,Y1,color);
+		if (Y2>Y1) 
+		{
+			ST7735_VLine(X1,Y1,Y2,color); 
+		}
+		else
+		{
+			ST7735_VLine(X1,Y2,Y1,color);
+		}		 
 		return;
 	}
 	if (dY == 0)
 	{
-		if (X2>X1) ST7735_HLine(X1,X2,Y1,color); else ST7735_HLine(X2,X1,Y1,color);
+		if (X2>X1) 
+		{
+			ST7735_HLine(X1,X2,Y1,color); 
+		}
+		else
+		{
+			ST7735_HLine(X2,X1,Y1,color);
+		} 
 		return;
 	}
 
@@ -329,7 +285,7 @@ void ST7735_PutChar5x7(uint16_t X, uint16_t Y, uint8_t chr, uint16_t color)
     }
 	CS_H();
 }
-
+#if 0
 void ST7735_PutStr5x7(uint8_t X, uint8_t Y, char *str, uint16_t color)
 {
     while (*str)
@@ -349,19 +305,7 @@ void ST7735_PutStr5x7(uint8_t X, uint8_t Y, char *str, uint16_t color)
         }
     };
 }
-
-void Lcd_send_cmd(tLCD_cmd cmd)
-{
-	uint8_t i;
-	A0_L();
-	ST7735_cmd(cmd.cmd);
-	A0_H();
-	for (i = 0 ; i < cmd.nrOfByte ; i++)
-	{
-		ST7735_data(cmd.data[i]);
-	}
-}
-
+#endif
 void Lcd_init(void)
 {
 	Lcd_reset();	// Reset display
@@ -434,7 +378,7 @@ void Lcd_init(void)
 
 	CS_H();
 
-	ST7735_Orientation(eLCD_orientation_normal);
+	//ST7735_Orientation(eLCD_orientation_normal);
 }
 
 void Lcd_another_init(void)

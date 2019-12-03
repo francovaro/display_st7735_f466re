@@ -84,12 +84,12 @@ void SPI_Config(void)
   SPI_InitStructure.SPI_DataSize = SPI_DataSize_8b;
   SPI_InitStructure.SPI_CPOL = SPI_CPOL_Low;		/* from chinese demo... */
   SPI_InitStructure.SPI_CPHA = SPI_CPHA_1Edge;		/* from chinese demo... */
-  SPI_InitStructure.SPI_NSS = SPI_NSS_Soft;
+  SPI_InitStructure.SPI_NSS = SPI_NSS_Soft | SPI_NSSInternalSoft_Set;
   SPI_InitStructure.SPI_BaudRatePrescaler = SPI_BaudRatePrescaler_8;	/* in demo is SPI_CRCCALCULATION_DISABLE */
   SPI_InitStructure.SPI_FirstBit = SPI_FirstBit_MSB;
   SPI_InitStructure.SPI_CRCPolynomial = 7;
 
-  SPI_NSSInternalSoftwareConfig(SPIx, SPI_NSSInternalSoft_Set);
+  //SPI_NSSInternalSoftwareConfig(SPIx, SPI_NSSInternalSoft_Set);
 
   SPI_Init(SPIx, &SPI_InitStructure);
 

@@ -30,20 +30,17 @@ int main(void)
 	SPI_Config();
 
 	ST7735_init_with_commands();
-
-	CS_L();
-	ST7735_AddrSet(0, 0, (LCD_SCREEN_W-1), (LCD_SCREEN_H-1));
-	CS_H();
-
-	ST7735_Clear(0xFFFF);
+	ST7735_set_orientation(eLCD_orientation_normal);
 
 	UART_fv_SendData(strStart, strlen(strStart));
 
 	while(1)
 	{
-		ST7735_Clear(color);
-		color++;
+		ST7735_clear(color);
 		Delay_ms(250);
+		ST7735_draw_rectangle(20, 20, 60, 60, !(color));
+		Delay_ms(250);
+		color++;
 	}
 
 }
