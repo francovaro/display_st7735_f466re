@@ -52,6 +52,13 @@ void ST7735_data(uint8_t data)
 	while (SPI_I2S_GetFlagStatus(SPIx, SPI_I2S_FLAG_BSY) == SET);
 }
 
+/**
+ *
+ * @param R red
+ * @param G green
+ * @param B blue
+ * @return the uin16 rapresentation of the signle R G B color
+ */
 uint16_t RGB565(uint8_t R,uint8_t G,uint8_t B)
 {
 	return ((R >> 3) << 11) | ((G >> 2) << 5) | (B >> 3);
@@ -96,16 +103,6 @@ void ST7735_Clear(uint16_t color)
 		ST7735_write(CL);
 	}
 	CS_H();
-}
-
-void ST7735_Pixel(uint16_t X, uint16_t Y, uint16_t color)
-{
-    CS_L();
-    ST7735_AddrSet(X,Y,X,Y);
-    A0_H();
-    ST7735_write(color >> 8);
-    ST7735_write((uint8_t)color);
-    CS_H();
 }
 
 void ST7735_HLine(uint16_t X1, uint16_t X2, uint16_t Y, uint16_t color)
@@ -219,8 +216,13 @@ void ST7735_Line(int16_t X1, int16_t Y1, int16_t X2, int16_t Y2, uint16_t color)
 	ST7735_Pixel(X1,Y1,color);
 }
 
+/**
+ *@brief
+ */
 void Lcd_reset(void)
 {
+	RST_H();
+	Delay_ms(50);
 	RST_L();
 	Delay_ms(150);
 	RST_H();
@@ -306,7 +308,9 @@ void ST7735_PutStr5x7(uint8_t X, uint8_t Y, char *str, uint16_t color)
     };
 }
 #endif
-void Lcd_init(void)
+
+#if 0
+void Lcd_lonely_init(void)
 {
 	Lcd_reset();	// Reset display
 	/*
@@ -381,7 +385,7 @@ void Lcd_init(void)
 	//ST7735_Orientation(eLCD_orientation_normal);
 }
 
-void Lcd_another_init(void)
+void Lcd_china_init(void)
 {
  	Lcd_reset();
 
@@ -500,3 +504,4 @@ void Lcd_another_init(void)
 
 	ST7735_Orientation(eLCD_orientation_normal);
 }
+#endif

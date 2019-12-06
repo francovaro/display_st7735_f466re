@@ -99,9 +99,9 @@ extern void ST7735_turns_display(uint8_t power);
 extern void ST7735_set_orientation(tLCD_orientation orientation);
 extern void ST7735_set_windows(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1);
 extern void ST7735_draw_pixel(uint16_t x, uint16_t y, uint16_t color);
-extern void ST7735_draw_rectangle(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1, uint16_t color);
-extern void ST7735_draw_v_line(uint16_t x0, uint16_t x1, uint16_t y, uint16_t color);
-extern void ST7735_draw_h_line(uint16_t x, uint16_t y0, uint16_t y1, uint16_t color);
+extern void ST7735_draw_filled_rectangle(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1, uint16_t color);
+extern void ST7735_draw_v_line(uint16_t x, uint16_t y0, uint16_t y1, uint16_t color);
+extern void ST7735_draw_h_line(uint16_t x0, uint16_t x1, uint16_t y, uint16_t color);
 extern void ST7735_clear(uint16_t color);
 
 #endif /* ST7735_CMD_H_ */

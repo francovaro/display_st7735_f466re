@@ -16,7 +16,7 @@
 #include "systick.h"
 #include "uart.h"
 #include "spi.h"
-#include "lcd.h"
+//#include "lcd.h"
 #include "color.h"
 #include "st7735_cmd.h"
 #include "delay.h"
@@ -38,7 +38,7 @@ int main(void)
 	{
 		ST7735_clear(color);
 		Delay_ms(250);
-		ST7735_draw_rectangle(20, 20, 60, 60, !(color));
+		ST7735_draw_filled_rectangle(20, 20, 60, 60, !(color));
 		Delay_ms(250);
 		color++;
 	}

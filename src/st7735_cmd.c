@@ -30,8 +30,10 @@ static uint8_t PWCTR2_buffer[1] = { 0xC5};
 static uint8_t PWCTR3_buffer[2] = { 0x0A, 0x00};
 static uint8_t PWCTR4_buffer[2] = { 0x8A, 0x2A};
 static uint8_t PWCTR5_buffer[2] = { 0x8A, 0xEE};
+
 static uint8_t VMCTR1_buffer[1] = { 0x0E};
-static uint8_t INVCTR_buffer[1] = { 0x03};
+
+static uint8_t INVCTR_buffer[1] = { 0x07};
 static uint8_t GAMSET_buffer_buffer[1] = { 0x01};
 
 
@@ -101,6 +103,11 @@ void ST7735_sys_cmd_init(void)
 	_lcd_sys_cmd[GAMSET].cmd = 0x26;
 	_lcd_sys_cmd[GAMSET].nrOfByte = 1;
 	_lcd_sys_cmd[GAMSET].data = GAMSET_buffer_buffer;
+
+	/* Memory Write */
+	_lcd_sys_cmd[RAMWR].cmd = 0x2C;
+	_lcd_sys_cmd[RAMWR].nrOfByte = 0;
+	_lcd_sys_cmd[RAMWR].data = NULL;
 
 }
 
@@ -241,7 +248,7 @@ void ST7735_send_panel_cmd(tST7735_panel_cmd panelCmd)
 { 0, 0, 0, 0}
  */
 
-#define _INIT_TYPE 0
+#define _INIT_TYPE 2
 
 #if _INIT_TYPE  == 0
     #define _ADA_INIT
@@ -282,15 +289,19 @@ void ST7735_init_with_commands(void)
 
 	ST7735_send_sys_cmd(VMCTR1);	/* 0xC5*/
 
+	ST7735_send_sys_cmd(INVOFF);	/* 0x20 */
+
 	ST7735_send_sys_cmd(MADCTL);	/* 0x36*/
 
-	ST7735_send_panel_cmd(GAMCTRP1);	/* 0xE0 */
-	ST7735_send_panel_cmd(GAMCTRN1);	/* 0xE1 */
+	ST7735_send_sys_cmd(COLMOD);	/* 0x3A */
 
 	ST7735_send_sys_cmd(CASET);		/* 0x2A */
 	ST7735_send_sys_cmd(RASET);		/* 0x2B */
 
-    ST7735_send_sys_cmd(COLMOD);	/* 0x3A */
+	ST7735_send_panel_cmd(GAMCTRP1);	/* 0xE0 */
+	ST7735_send_panel_cmd(GAMCTRN1);	/* 0xE1 */
+
+
 #elif _LONELY_INIT
     ST7735_send_sys_cmd(COLMOD);	/* 0x3A */
 
@@ -314,18 +325,16 @@ void ST7735_init_with_commands(void)
 
 	ST7735_send_sys_cmd(COLMOD);	/* 0x3A */
 
-
-
 	ST7735_send_panel_cmd(GAMCTRP1);	/* 0xE0 */
 	ST7735_send_panel_cmd(GAMCTRN1);	/* 0xE1 */
 #endif
 
 	ST7735_send_sys_cmd(DISPON);
 	Delay_ms(100);
-#ifdef _ADA_INIT
+
 	ST7735_send_sys_cmd(NORON);
 	Delay_ms(10);
-#endif
+
 
 	CS_H();	/* end of transmission */
 }
@@ -432,6 +441,9 @@ void ST7735_set_windows(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1)
     // CS_L();    
 	ST7735_send_sys_cmd(CASET);		/* 0x2A */
 	ST7735_send_sys_cmd(RASET);		/* 0x2B */    
+
+	ST7735_send_sys_cmd(RAMWR);		/* 0x2C */
+
     // CS_H();
 }
 
@@ -445,7 +457,7 @@ void ST7735_draw_pixel(uint16_t x, uint16_t y, uint16_t color)
     CS_H();
 }
 
-void ST7735_draw_rectangle(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1, uint16_t color)  
+void ST7735_draw_filled_rectangle(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1, uint16_t color)
 {
     uint8_t i;
     uint8_t j;
@@ -465,17 +477,27 @@ void ST7735_draw_rectangle(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1, u
     CS_H();
 }
 
-void ST7735_draw_v_line(uint16_t x0, uint16_t x1, uint16_t y, uint16_t color)
+void ST7735_draw_unfilled_rectangle(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1, uint16_t color)
 {
-    ST7735_draw_rectangle(x0, y, x1, y, color);
+	ST7735_draw_v_line(x0, y0, y1, color);
+	ST7735_draw_v_line(x1, y0, y1, color);
+
+	ST7735_draw_h_line(x0, x1, y0, color);
+	ST7735_draw_h_line(x0, x1, y1, color);
 }
 
-void ST7735_draw_h_line(uint16_t x, uint16_t y0, uint16_t y1, uint16_t color)
+
+void ST7735_draw_h_line(uint16_t x0, uint16_t x1, uint16_t y, uint16_t color)
 {
-    ST7735_draw_rectangle(x, y0, x, y1, color);
+    ST7735_draw_filled_rectangle(x0, y, x1, y, color);
+}
+
+void ST7735_draw_v_line(uint16_t x, uint16_t y0, uint16_t y1, uint16_t color)
+{
+    ST7735_draw_filled_rectangle(x, y0, x, y1, color);
 }
 
 void ST7735_clear(uint16_t color)
 {
-    ST7735_draw_rectangle(0, 0, (LCD_SCREEN_W - 1), (LCD_SCREEN_H - 1), color);
+    ST7735_draw_filled_rectangle(0, 0, (LCD_SCREEN_W - 1), (LCD_SCREEN_H - 1), color);
 }
