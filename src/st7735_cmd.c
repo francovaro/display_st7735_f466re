@@ -79,9 +79,9 @@ void ST7735_sys_cmd_init(void)
 	_lcd_sys_cmd[DISPON].data = NULL;
 
 	/* Display OFF */
-	_lcd_sys_cmd[DISPON].cmd = 0x28;
-	_lcd_sys_cmd[DISPON].nrOfByte = 0;
-	_lcd_sys_cmd[DISPON].data = NULL;
+	_lcd_sys_cmd[DISPOFF].cmd = 0x28;
+	_lcd_sys_cmd[DISPOFF].nrOfByte = 0;
+	_lcd_sys_cmd[DISPOFF].data = NULL;
 
     /* Interface Pixel Format */
     _lcd_sys_cmd[COLMOD].cmd = 0x3A;
@@ -254,8 +254,10 @@ void ST7735_send_panel_cmd(tST7735_panel_cmd panelCmd)
     #define _ADA_INIT
 #elif _INIT_TYPE == 1
     #define _LONELY_INIT
-#else
+#elif _INIT_TYPE == 2
     #define _CHINA_INIT
+#else
+	#define _ILI9341_INIT
 #endif
 
 void ST7735_init_with_commands(void)
