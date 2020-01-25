@@ -21,7 +21,6 @@ uint8_t _lcd_screen_h;
 static tLCD_cmd _lcd_sys_cmd[e_syscmd_max];
 static tLCD_cmd _lcd_panel_cmd[e_panelcmd_max];
 
-//static uint8_t FRMCTR1_buffer[3] = { 0x01, 0x2C, 0x2D};
 static uint8_t FRMCTR1_buffer[3] = { 0x01, 0x2C, 0x2D};
 static uint8_t FRMCTR2_buffer[3] = { 0x01, 0x2C, 0x2D};
 static uint8_t FRMCTR3_buffer[6] = { 0x01, 0x2C, 0x2D, 0x01, 0x2C, 0x2D};
@@ -37,16 +36,17 @@ static uint8_t VMCTR1_buffer[1] = { 0x0E};
 static uint8_t INVCTR_buffer[1] = { 0x07};
 static uint8_t GAMSET_buffer_buffer[1] = { 0x01};
 
-
-
 static uint8_t GAMCTRP1_buffer[16] = {0x02, 0x1C, 0x07, 0x12, 0x37, 0x32, 0x29, 0x2D, 0x29, 0x25, 0x2B, 0x39, 0x00, 0x01, 0x03, 0x10 };
 static uint8_t GAMCTRN1_buffer[16] = {0x03, 0x1d, 0x07, 0x06, 0x2E, 0x2C, 0x29, 0x2D, 0x2E, 0x2E, 0x37, 0x3F, 0x00, 0x00, 0x02, 0x10 };
+
+//static uint8_t GAMCTRP1_buffer[16] = {0x0f, 0x1a, 0x0f, 0x18, 0x2f, 0x28, 0x20, 0x22, 0x1f, 0x1b, 0x23, 0x37, 0x00, 0x07, 0x02, 0x10 };
+//static uint8_t GAMCTRN1_buffer[16] = {0x0f, 0x1b, 0x0f, 0x17, 0x33, 0x2C, 0x29, 0x2e, 0x30, 0x30, 0x39, 0x3F, 0x00, 0x07, 0x03, 0x10 };
 
 static uint8_t CASET_buffer_buffer[4] 	= {0x00, 0x00, 0x00, 0x7F};
 static uint8_t RASET_buffer_buffer[4] 	= {0x00, 0x00, 0x00, 0x7F};
 static uint8_t COLMOD_buffer_buffer[1] 	= {0x05};
 
-static uint8_t MAD_CTL_buffer[1] = { 0xC8};
+static uint8_t MAD_CTL_buffer[1] = {0x00};
 
 
 void ST7735_sys_cmd_init(void)
@@ -150,7 +150,7 @@ void ST7735_panel_cmd_init(void)
     _lcd_panel_cmd[PWCTR4].nrOfByte = 2;
     _lcd_panel_cmd[PWCTR4].data = PWCTR4_buffer;
 
-    _lcd_panel_cmd[PWCTR5].cmd = 0xC3;
+    _lcd_panel_cmd[PWCTR5].cmd = 0xC4;
     _lcd_panel_cmd[PWCTR5].nrOfByte = 2;
     _lcd_panel_cmd[PWCTR5].data = PWCTR5_buffer;
 
@@ -268,12 +268,12 @@ void ST7735_init_with_commands(void)
 	/* Reset Sequence START*/
 	Lcd_reset();
 	ST7735_sys_cmd_init();
-	ST7735_sys_cmd_init();
+	ST7735_panel_cmd_init();
 
 	_lcd_screen_w = LCD_SCREEN_W;
 	_lcd_screen_h = LCD_SCREEN_H;
 
-	CS_L();	/* start of transmission */
+	//CS_L();	/* start of transmission */
 
     ST7735_send_sys_cmd(SWRESET);	/* 0x01 */
     Delay_ms (150);
@@ -301,17 +301,18 @@ void ST7735_init_with_commands(void)
 	ST7735_send_sys_cmd(INVOFF);	/* 0x20 */
 
 	ST7735_send_sys_cmd(MADCTL);	/* 0x36*/
+	ST7735_send_sys_cmd(COLMOD);	/* 0x3A */
 
-
-
+	/* column address */
 	ST7735_send_sys_cmd(CASET);		/* 0x2A */
+	/* row address */
 	ST7735_send_sys_cmd(RASET);		/* 0x2B */
 
 	/* Gamma sequence */
 	ST7735_send_panel_cmd(GAMCTRP1);	/* 0xE0 */
 	ST7735_send_panel_cmd(GAMCTRN1);	/* 0xE1 */
 
-	ST7735_send_sys_cmd(COLMOD);	/* 0x3A */
+
 
 
 #elif _LONELY_INIT
@@ -341,14 +342,14 @@ void ST7735_init_with_commands(void)
 	ST7735_send_panel_cmd(GAMCTRN1);	/* 0xE1 */
 #endif
 
+	Delay_ms(5);
 	ST7735_send_sys_cmd(DISPON);	/* */
 	Delay_ms(100);
 
 	ST7735_send_sys_cmd(NORON);		/* */
 	Delay_ms(10);
 
-
-	CS_H();	/* end of transmission */
+	//CS_H();	/* end of transmission */
 }
 
 void ST7735_turns_display(uint8_t power)
