@@ -14,13 +14,12 @@
 
 #define SPIx                           SPI2
 #define SPIx_CLK                       RCC_APB1Periph_SPI2
-//#define SPIx_CLK                       RCC_APB2Periph_SPI1
 #define SPIx_CLK_INIT                  RCC_APB1PeriphClockCmd
 //#define SPIx_CLK_INIT                  RCC_APB2PeriphClockCmd
 #define SPIx_IRQn                      SPI2_IRQn
 #define SPIx_IRQHANDLER                SPI2_IRQHandler
 
-/* CLK - GPIOB 10*/
+/* CLK - GPIOC 07*/
 #define SPIx_SCK_PIN                   GPIO_Pin_7
 #define SPIx_SCK_GPIO_PORT             GPIOC
 #define SPIx_SCK_GPIO_CLK              RCC_AHB1Periph_GPIOC
@@ -35,19 +34,19 @@
 #define SPIx_MISO_AF                   GPIO_AF_SPI2
 #endif
 
-/* MOSI/SDA -  GPIOC 1*/
+/* MOSI/SDA -  GPIOC 03 */
 #define SPIx_MOSI_PIN                  GPIO_Pin_3
 #define SPIx_MOSI_GPIO_PORT            GPIOC
 #define SPIx_MOSI_GPIO_CLK             RCC_AHB1Periph_GPIOC
 #define SPIx_MOSI_SOURCE               GPIO_PinSource3
 #define SPIx_MOSI_AF                   GPIO_AF_SPI2
 
-/* CHIP SELECT - GPIOB 12*/
+/* CHIP SELECT - GPIOC 02*/
 #define SPIx_CS_PIN                    GPIO_Pin_2
 #define SPIx_CS_GPIO_PORT              GPIOC
 #define SPIx_CS_GPIO_CLK               RCC_AHB1Periph_GPIOC
 
-/* A0 - GPIOC 3*/
+/* A0 - GPIOC 00*/
 #define LCD_A0_PIN                     GPIO_Pin_0
 #define LCD_A0_GPIO_PORT               GPIOC
 #define LCD_A0_GPIO_CLK                RCC_AHB1Periph_GPIOC
@@ -71,7 +70,7 @@
 
 #define BUFFERSIZE                     100	/* */
 
-void SPI_Config(void);
+extern void SPI_Config(void);
 void SPIx_IRQHANDLER(void);
 
 #endif /* SPI_H_ */

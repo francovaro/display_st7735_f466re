@@ -222,11 +222,11 @@ void ST7735_Line(int16_t X1, int16_t Y1, int16_t X2, int16_t Y2, uint16_t color)
 void Lcd_reset(void)
 {
 	RST_H();
-	Delay_ms(50);
+	Delay_ms(1);
 	RST_L();
-	Delay_ms(150);
+	Delay_ms(1);
 	RST_H();
-	Delay_ms(50);
+	Delay_ms(150);
 }
 
 void ST7735_Rect(uint16_t X1, uint16_t Y1, uint16_t X2, uint16_t Y2, uint16_t color)

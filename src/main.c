@@ -33,7 +33,7 @@ int main(void)
 	ST7735_set_orientation(eLCD_orientation_normal);
 
 	UART_fv_SendData(strStart, strlen(strStart));
-
+	RST_L();
 	while(1)
 	{
 		ST7735_clear(color);
