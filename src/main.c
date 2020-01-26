@@ -29,7 +29,8 @@ int main(void)
 	SPI_Config();
 
 	ST7735_init_with_commands();
-	//ST7735_set_orientation(eLCD_orientation_normal);
+	ST7735_set_orientation(eLCD_orientation_normal);
+	ST7735_set_windows(50, 50, 70, 70);
 	ST7735_clear(0);
 
 	UART_fv_SendData(strStart, strlen(strStart));

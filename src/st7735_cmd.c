@@ -21,7 +21,7 @@ uint8_t _lcd_screen_h;
 static tLCD_cmd _lcd_sys_cmd[e_syscmd_max];
 static tLCD_cmd _lcd_panel_cmd[e_panelcmd_max];
 
-static uint8_t FRMCTR1_buffer[3] = { 0x01, 0x2C, 0x2D};
+static uint8_t FRMCTR1_buffer[3] = { 0x01, 0x2C, 0x2D};	/*{ 0x00, 0x06, 0x03D} */
 static uint8_t FRMCTR2_buffer[3] = { 0x01, 0x2C, 0x2D};
 static uint8_t FRMCTR3_buffer[6] = { 0x01, 0x2C, 0x2D, 0x01, 0x2C, 0x2D};
 
@@ -29,11 +29,19 @@ static uint8_t PWCTR1_buffer[3] = { 0xA2, 0x02, 0x84};
 static uint8_t PWCTR2_buffer[1] = { 0xC5};
 static uint8_t PWCTR3_buffer[2] = { 0x0A, 0x00};
 static uint8_t PWCTR4_buffer[2] = { 0x8A, 0x2A};
-static uint8_t PWCTR5_buffer[2] = { 0x8A, 0xEE};
+static uint8_t PWCTR5_buffer[2] = { 0x8A, 0xEE};	/*{0x8A,0x2A}; ? */
 
-static uint8_t VMCTR1_buffer[1] = { 0x0E};
+static uint8_t VMCTR1_buffer[1] = { 0x0E};	/* {0x3C,0x38}; ?*/
 
-static uint8_t INVCTR_buffer[1] = { 0x07};
+static uint8_t INVCTR_buffer[1] = { 0x00};	/* 0x00 or 0x07*/
+
+/*
+ * GAMSET
+ * 01
+ * 02
+ * 04
+ * 08
+ */
 static uint8_t GAMSET_buffer_buffer[1] = { 0x01};
 
 static uint8_t GAMCTRP1_buffer[16] = {0x02, 0x1C, 0x07, 0x12, 0x37, 0x32, 0x29, 0x2D, 0x29, 0x25, 0x2B, 0x39, 0x00, 0x01, 0x03, 0x10 };
@@ -42,9 +50,16 @@ static uint8_t GAMCTRN1_buffer[16] = {0x03, 0x1d, 0x07, 0x06, 0x2E, 0x2C, 0x29, 
 //static uint8_t GAMCTRP1_buffer[16] = {0x0f, 0x1a, 0x0f, 0x18, 0x2f, 0x28, 0x20, 0x22, 0x1f, 0x1b, 0x23, 0x37, 0x00, 0x07, 0x02, 0x10 };
 //static uint8_t GAMCTRN1_buffer[16] = {0x0f, 0x1b, 0x0f, 0x17, 0x33, 0x2C, 0x29, 0x2e, 0x30, 0x30, 0x39, 0x3F, 0x00, 0x07, 0x03, 0x10 };
 
-static uint8_t CASET_buffer_buffer[4] 	= {0x00, 0x00, 0x00, 0x7F};
-static uint8_t RASET_buffer_buffer[4] 	= {0x00, 0x00, 0x00, 0x7F};
-static uint8_t COLMOD_buffer_buffer[1] 	= {0x05};
+static uint8_t CASET_buffer_buffer[4] 	= {0x00, 0x00, 0x00, 0x50};
+static uint8_t RASET_buffer_buffer[4] 	= {0x00, 0x00, 0x00, 0x50};
+
+/* COLMOD
+ * 0x03 12 bit/pixel
+ * 0x05 16 bit/pixel
+ * 0x06 18 bit/pixel
+ * 0x07 No used
+ * */
+static uint8_t COLMOD_buffer_buffer[1] 	= {0x03};
 
 static uint8_t MAD_CTL_buffer[1] = {0x00};
 
@@ -55,6 +70,11 @@ void ST7735_sys_cmd_init(void)
     _lcd_sys_cmd[SWRESET].cmd = 0x01;
     _lcd_sys_cmd[SWRESET].nrOfByte = 0;
     _lcd_sys_cmd[SWRESET].data = NULL;
+
+    /* Sleep ON */
+	_lcd_sys_cmd[SLPIN].cmd = 0x10;
+	_lcd_sys_cmd[SLPOUT].nrOfByte = 0;
+	_lcd_sys_cmd[SLPIN].data = NULL;
 
     /* Sleep Out & Booster On */
     _lcd_sys_cmd[SLPOUT].cmd = 0x11;
@@ -111,6 +131,17 @@ void ST7735_sys_cmd_init(void)
 	_lcd_sys_cmd[RAMWR].cmd = 0x2C;
 	_lcd_sys_cmd[RAMWR].nrOfByte = 0;
 	_lcd_sys_cmd[RAMWR].data = NULL;
+
+	/* IDLE MODE OFF */
+	_lcd_sys_cmd[IDMOFF].cmd = 0x38;
+	_lcd_sys_cmd[IDMOFF].nrOfByte = 0;
+	_lcd_sys_cmd[IDMOFF].data = NULL;
+
+	/* IDLE MODE ON */
+	_lcd_sys_cmd[IDMON].cmd = 0x39;
+	_lcd_sys_cmd[IDMON].nrOfByte = 0;
+	_lcd_sys_cmd[IDMON].data = NULL;
+
 
 }
 
@@ -279,7 +310,7 @@ void ST7735_init_with_commands(void)
     Delay_ms (150);
 
 	ST7735_send_sys_cmd(SLPOUT);	/* 0x11 */
-	Delay_ms (150);
+	Delay_ms (10);
 	/* Reset Sequence END */
 #ifndef _ADA_INIT
 	/* Frame Rate */
@@ -300,19 +331,22 @@ void ST7735_init_with_commands(void)
 
 	ST7735_send_sys_cmd(INVOFF);	/* 0x20 */
 
-	ST7735_send_sys_cmd(MADCTL);	/* 0x36*/
+	/* Color per pixel */
 	ST7735_send_sys_cmd(COLMOD);	/* 0x3A */
+
+	/* Gamma sequence */
+	ST7735_send_panel_cmd(GAMCTRP1);	/* 0xE0 */
+	ST7735_send_panel_cmd(GAMCTRN1);	/* 0xE1 */
+
+	ST7735_send_sys_cmd(IDMOFF);	/* 0x3A */
 
 	/* column address */
 	ST7735_send_sys_cmd(CASET);		/* 0x2A */
 	/* row address */
 	ST7735_send_sys_cmd(RASET);		/* 0x2B */
 
-	/* Gamma sequence */
-	ST7735_send_panel_cmd(GAMCTRP1);	/* 0xE0 */
-	ST7735_send_panel_cmd(GAMCTRN1);	/* 0xE1 */
 
-
+	//ST7735_send_sys_cmd(MADCTL);	/* 0x36*/
 
 
 #elif _LONELY_INIT

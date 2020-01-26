@@ -224,7 +224,7 @@ void Lcd_reset(void)
 	RST_H();
 	Delay_ms(1);
 	RST_L();
-	Delay_ms(1);
+	Delay_ms(50);
 	RST_H();
 	Delay_ms(150);
 }
