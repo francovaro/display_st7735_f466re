@@ -182,7 +182,7 @@ void ST7735_Line(int16_t X1, int16_t Y1, int16_t X2, int16_t Y2, uint16_t color)
 		di = dY2 - dX;
 		while (X1 != X2)
 		{
-			ST7735_Pixel(X1,Y1,color);
+			//ST7735_Pixel(X1,Y1,color);
 			X1 += dXsym;
 			if (di < 0)
 			{
@@ -200,7 +200,7 @@ void ST7735_Line(int16_t X1, int16_t Y1, int16_t X2, int16_t Y2, uint16_t color)
 		di = dX2 - dY;
 		while (Y1 != Y2)
 		{
-			ST7735_Pixel(X1,Y1,color);
+			//ST7735_Pixel(X1,Y1,color);
 			Y1 += dYsym;
 			if (di < 0)
 			{
@@ -213,7 +213,7 @@ void ST7735_Line(int16_t X1, int16_t Y1, int16_t X2, int16_t Y2, uint16_t color)
 			}
 		}
 	}
-	ST7735_Pixel(X1,Y1,color);
+	//ST7735_Pixel(X1,Y1,color);
 }
 
 /**
@@ -221,12 +221,26 @@ void ST7735_Line(int16_t X1, int16_t Y1, int16_t X2, int16_t Y2, uint16_t color)
  */
 void Lcd_reset(void)
 {
-	RST_H();
-	Delay_ms(1);
+	/*
 	RST_L();
 	Delay_ms(50);
 	RST_H();
 	Delay_ms(150);
+	*/
+	/*
+	RST_H();
+	Delay_ms(1);
+	RST_L();
+	Delay_ms(1);
+	RST_H();
+	Delay_ms(150);
+	*/
+	RST_H();
+	Delay_ms(100);
+	RST_L();
+	Delay_ms(200);
+	RST_H();
+	Delay_ms(100);
 }
 
 void ST7735_Rect(uint16_t X1, uint16_t Y1, uint16_t X2, uint16_t Y2, uint16_t color)

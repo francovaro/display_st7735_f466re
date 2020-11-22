@@ -26,7 +26,7 @@ void SPI_Config(void)
   SPIx_CLK_INIT(SPIx_CLK, ENABLE);
 
   /* Enable GPIO clocks */
-  //RCC_AHB1PeriphClockCmd(SPIx_SCK_GPIO_CLK | SPIx_MISO_GPIO_CLK | SPIx_MOSI_GPIO_CLK | LCD_A0_GPIO_CLK, ENABLE);
+
   RCC_AHB1PeriphClockCmd(SPIx_SCK_GPIO_CLK | SPIx_MOSI_GPIO_CLK | SPIx_CS_GPIO_CLK
 		  	  	  	  	  	  | LCD_A0_GPIO_CLK | LCD_RESET_GPIO_CLK, ENABLE);
 
@@ -44,8 +44,8 @@ void SPI_Config(void)
 
   GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_AF;
   GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
-  GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
-  GPIO_InitStructure.GPIO_PuPd  = GPIO_PuPd_UP;
+  GPIO_InitStructure.GPIO_OType = GPIO_OType_OD;
+  GPIO_InitStructure.GPIO_PuPd  = GPIO_PuPd_NOPULL;
 
   /* SPI SCK pin configuration */
   GPIO_InitStructure.GPIO_Pin = SPIx_SCK_PIN;
@@ -79,14 +79,14 @@ void SPI_Config(void)
   /* SPI configuration -------------------------------------------------------*/
   SPI_I2S_DeInit(SPIx);
   SPI_InitStructure.SPI_Mode = SPI_Mode_Master;
-  SPI_InitStructure.SPI_Direction = SPI_Direction_1Line_Tx;
+  SPI_InitStructure.SPI_Direction = SPI_Direction_2Lines_FullDuplex;
   SPI_InitStructure.SPI_DataSize = SPI_DataSize_8b;
   SPI_InitStructure.SPI_CPOL = SPI_CPOL_Low;		/* from chinese demo... */
   SPI_InitStructure.SPI_CPHA = SPI_CPHA_1Edge;		/* from chinese demo... */
-  SPI_InitStructure.SPI_NSS = SPI_NSS_Soft | SPI_NSSInternalSoft_Set;
+  SPI_InitStructure.SPI_NSS = SPI_NSS_Soft /*| SPI_NSSInternalSoft_Set*/;
   SPI_InitStructure.SPI_BaudRatePrescaler = SPI_BaudRatePrescaler_8;	/* in demo is SPI_CRCCALCULATION_DISABLE */
   SPI_InitStructure.SPI_FirstBit = SPI_FirstBit_MSB;
-  SPI_InitStructure.SPI_CRCPolynomial = 7;
+  SPI_InitStructure.SPI_CRCPolynomial = 10;
 
   //SPI_NSSInternalSoftwareConfig(SPIx, SPI_NSSInternalSoft_Set);
 

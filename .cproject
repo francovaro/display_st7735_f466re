@@ -41,6 +41,8 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/nucleo-f446re_stdperiph_lib/CMSIS/device}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/nucleo-f446re_stdperiph_lib/StdPeriph_Driver/inc}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${ProjDirPath}/inc&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/lib_uart/inc}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/lib_sysTick/inc}&quot;"/>
 								</option>
 								<inputType id="fr.ac6.managedbuild.tool.gnu.cross.c.compiler.input.c.110424226" superClass="fr.ac6.managedbuild.tool.gnu.cross.c.compiler.input.c"/>
 								<inputType id="fr.ac6.managedbuild.tool.gnu.cross.c.compiler.input.s.1073610501" superClass="fr.ac6.managedbuild.tool.gnu.cross.c.compiler.input.s"/>
@@ -51,9 +53,13 @@
 							</tool>
 							<tool id="fr.ac6.managedbuild.tool.gnu.cross.c.linker.1717604240" name="MCU GCC Linker" superClass="fr.ac6.managedbuild.tool.gnu.cross.c.linker">
 								<option id="gnu.c.link.option.paths.105062506" name="Library search path (-L)" superClass="gnu.c.link.option.paths" valueType="libPaths">
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/lib_sysTick/Debug}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/lib_uart/Debug}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/nucleo-f446re_stdperiph_lib/Debug}&quot;"/>
 								</option>
 								<option id="gnu.c.link.option.libs.690223779" name="Libraries (-l)" superClass="gnu.c.link.option.libs" valueType="libs">
+									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="lib_sysTick"/>
+									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="lib_uart"/>
 									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="nucleo-f446re_stdperiph_lib"/>
 								</option>
 								<inputType id="cdt.managedbuild.tool.gnu.c.linker.input.181535112" superClass="cdt.managedbuild.tool.gnu.c.linker.input">
@@ -70,6 +76,8 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/nucleo-f446re_stdperiph_lib/CMSIS/device}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/nucleo-f446re_stdperiph_lib/StdPeriph_Driver/inc}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${ProjDirPath}/inc&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/lib_uart/inc}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/lib_sysTick/inc}&quot;"/>
 								</option>
 								<inputType id="cdt.managedbuild.tool.gnu.assembler.input.1985122596" superClass="cdt.managedbuild.tool.gnu.assembler.input"/>
 								<inputType id="fr.ac6.managedbuild.tool.gnu.cross.assembler.input.647878757" superClass="fr.ac6.managedbuild.tool.gnu.cross.assembler.input"/>
@@ -88,6 +96,20 @@
 						<entry flags="VALUE_WORKSPACE_PATH" kind="includePath" name="/nucleo-f446re_stdperiph_lib"/>
 						<entry flags="VALUE_WORKSPACE_PATH" kind="libraryPath" name="/nucleo-f446re_stdperiph_lib/Debug"/>
 						<entry flags="RESOLVED" kind="libraryFile" name="nucleo-f446re_stdperiph_lib" srcPrefixMapping="" srcRootPath=""/>
+					</externalSetting>
+				</externalSettings>
+				<externalSettings containerId="lib_uart;" factoryId="org.eclipse.cdt.core.cfg.export.settings.sipplier">
+					<externalSetting>
+						<entry flags="VALUE_WORKSPACE_PATH" kind="includePath" name="/lib_uart"/>
+						<entry flags="VALUE_WORKSPACE_PATH" kind="libraryPath" name="/lib_uart/Debug"/>
+						<entry flags="RESOLVED" kind="libraryFile" name="lib_uart" srcPrefixMapping="" srcRootPath=""/>
+					</externalSetting>
+				</externalSettings>
+				<externalSettings containerId="lib_sysTick;" factoryId="org.eclipse.cdt.core.cfg.export.settings.sipplier">
+					<externalSetting>
+						<entry flags="VALUE_WORKSPACE_PATH" kind="includePath" name="/lib_sysTick"/>
+						<entry flags="VALUE_WORKSPACE_PATH" kind="libraryPath" name="/lib_sysTick/Debug"/>
+						<entry flags="RESOLVED" kind="libraryFile" name="lib_sysTick" srcPrefixMapping="" srcRootPath=""/>
 					</externalSetting>
 				</externalSettings>
 			</storageModule>
@@ -196,4 +218,6 @@
 		</scannerConfigBuildInfo>
 	</storageModule>
 	<storageModule moduleId="org.eclipse.cdt.core.LanguageSettingsProviders"/>
+	<storageModule moduleId="org.eclipse.cdt.make.core.buildtargets"/>
+	<storageModule moduleId="refreshScope"/>
 </cproject>

@@ -4,20 +4,17 @@
  *  @brief	
  *
  *  @author: franc
- *  @date  : 26 nov 2019
+ *  @date  : 11 nov 2020
  */
 
-#ifndef DELAY_H_
-#define DELAY_H_
+#ifndef INC_DELAY_H_
+#define INC_DELAY_H_
 
-__IO uint32_t TimingDelay; // __IO -- volatile
+#include <stdint.h>
 
-
-/*
- *   Declare Functions
- */
-extern void Delay_ms(uint32_t nTime);
-extern void Delay_us(uint32_t nTime);
+extern void Delay_init(void);
+extern void Delay_ms(uint16_t delay);
+extern void Delay_us(uint16_t delay);
 
 
-#endif /* DELAY_H_ */
+#endif /* INC_DELAY_H_ */

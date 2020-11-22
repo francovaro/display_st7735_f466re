@@ -4,34 +4,55 @@
  *  @brief	
  *
  *  @author: franc
- *  @date  : 26 nov 2019
+ *  @date  : 11 nov 2020
  */
-
-#include "systick.h"
-
+#include "stm32f4xx.h"
 #include "delay.h"
 
-#define DELAY_TICK_FREQUENCY_US 1000000   /* = 1MHZ -> microseconds delay */
-#define DELAY_TICK_FREQUENCY_MS 1000      /* = 1kHZ -> milliseconds delay */
+volatile uint32_t _req_delay_us;
 
-// Do delay for mSecs milliseconds
 /**
- *
+ * @brief Initializes the sys tick freq
  */
-void Delay_ms(uint32_t mSecs)
+void Delay_init(void)
 {
-	setSysTick(DELAY_TICK_FREQUENCY_MS);
-	TimingDelay = mSecs+1;
-	while (TimingDelay != 0);
+	_req_delay_us = 0;
+	SystemCoreClockUpdate();
+	SysTick_Config(SystemCoreClock / 1000000);
 }
 
-// Do delay for nSecs microseconds
 /**
- *
+ * @brief
+ * @param delay
  */
-void Delay_us(uint32_t uSecs)
+void Delay_ms(uint16_t delay)
 {
-	setSysTick(DELAY_TICK_FREQUENCY_US);
-	TimingDelay = uSecs+1;
-	while (TimingDelay != 0);
+	do
+	{
+		Delay_us(1000);
+		delay--;
+	}while(delay);
+}
+
+/**
+ * @brief
+ * @param delay
+ */
+void Delay_us(uint16_t delay)
+{
+	_req_delay_us = delay;
+
+	while(_req_delay_us);
+}
+
+/**
+ * @brief The systick handler. In this case it lower the delay variable if was set
+ * @note period is 1us
+ */
+void SysTick_Handler(void)
+{
+	if(_req_delay_us != 0)
+	{
+		_req_delay_us--;
+	}
 }
