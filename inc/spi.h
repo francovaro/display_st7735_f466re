@@ -13,12 +13,13 @@
 #include "stm32f4xx.h"
 
 #define SPIx                           SPI2
+
 #define SPIx_CLK                       RCC_APB1Periph_SPI2
 #define SPIx_CLK_INIT                  RCC_APB1PeriphClockCmd
 #define SPIx_IRQn                      SPI2_IRQn
 #define SPIx_IRQHANDLER                SPI2_IRQHandler
 
-/* CLK - GPIOC 07*/
+/* CLK - GPIOB 10*/
 #define SPIx_SCK_PIN                   GPIO_Pin_10
 #define SPIx_SCK_GPIO_PORT             GPIOB
 #define SPIx_SCK_GPIO_CLK              RCC_AHB1Periph_GPIOB
@@ -34,7 +35,7 @@
 #endif
 
 /* MOSI/SDA -  GPIOC 03 */
-#define SPIx_MOSI_PIN                  GPIO_Pin_1
+#define SPIx_MOSI_PIN                  GPIO_Pin_3
 #define SPIx_MOSI_GPIO_PORT            GPIOC
 #define SPIx_MOSI_GPIO_CLK             RCC_AHB1Periph_GPIOC
 #define SPIx_MOSI_SOURCE               GPIO_PinSource3

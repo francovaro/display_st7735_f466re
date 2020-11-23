@@ -39,10 +39,10 @@ int main(void)
 
 	while(1)
 	{
-		Delay_ms(1000);
-		ST7735_turns_display(SET);
-		Delay_ms(1000);
-		ST7735_turns_display(RESET);
+		ST7735_clear(ST7735_ORANGE);
+		Delay_ms(500);
+		ST7735_clear(ST7735_MAGENTA);
+		Delay_ms(500);
 
 		//color++;
 		/*
